@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remote Patient Monitoring ROI</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styles.css}" /> <!-- Include your CSS -->
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <img src="/api/placeholder/150/50" alt="Your Brand" height="30">
+        </a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="#">Find Solutions</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Find Services</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">SME Solutions</a></li>
+                <li class="nav-item"><a class="nav-link active" href="#">Industries</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Knowledge Base</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Support</a></li>
+            </ul>
+            <button class="btn btn-outline-primary ms-2">Sign Up</button>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <h1 class="text-center mb-5">Remote Patient Monitoring ROI Calculation</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Results:</h2>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Amount ($)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Total Investment Costs</td>
+                    <td th:text="${totalInvestmentCosts}"></td>
+                </tr>
+                <tr>
+                    <td>Total Net Benefit Over the Investment Period</td>
+                    <td th:text="${totalNetBenefit}"></td>
+                </tr>
+
+                <tr>
+                    <td>Investment Period (Years)</td>
+                    <td th:text="${investmentPeriod}"></td>
+                </tr>
+                <tr>
+                    <td>ROI (%)</td>
+                    <td th:text="${roi} + '%'"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="col-md-6">
+            <h3 class="mt-4">ROI Bar Chart:</h3>
+<!--            <img src="/images/rpm_chart.png" alt="ROI Bar Chart" class="img-fluid mt-3"> &lt;!&ndash; Added margin top &ndash;&gt;-->
+<!--            <img th:src="@{/images/rpm_chart.png(ts=${imageVersion})}" alt="ROI Bar Chart" class="img-fluid mt-3">-->
+            <img th:src="@{/rpm/chart(imageName='rpm_chart.png')}" alt="ROI Bar Chart" class="img-fluid mt-3">
+
+        </div>
+    </div>
+
+    <hr>
+
+    <a class="btn btn-secondary" th:href="@{/healthcare/remote-patient-monitoring-form}">Back to Form</a>
+    <a class="btn btn-secondary" th:href="@{/healthcare/rpm-report}">Create Report (PDF)</a>
+<!--    <a class="btn btn-secondary" th:href="@{/healthcare/rpm-report}">Create Report (PDF)</a>-->
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+body {
+    background-color: #f0f0f0; /* Light gray background */
+    padding: 5px; /* Less padding around the body */
+}
+
+
+.input-narrow {
+    width: 100%;
+    max-width: 200px; /* Narrower input fields */
+}
+
+h1, h3 {
+    font-size: 1.25rem; /* Smaller font sizes for headers */
+}
+.form-label {
+    font-size: 0.85rem; /* Smaller font for labels */
+}
+.mb-3 {
+    margin-bottom: 0.3rem; /* Reduce margin between inputs */
+}
+button {
+    font-size: 0.9rem; /* Smaller button font */
+}
+
+
+.industry-card {
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    transition: box-shadow 0.3s;
+    background-color: #ffffff; /* White background for cards */
+}
+.industry-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.industry-icon {
+    font-size: 48px;
+    color: #0056b3;
+    margin-bottom: 15px;
+}
+
+.industry-link {
+    text-decoration: none; /* Removes the underline */
+    color: inherit; /* Inherits the color from the parent element, keeps it dark */
+    display: block; /* Makes the entire div clickable */
+}
+
+.industry-link:hover {
+    color: #000; /* Ensures the color stays dark even on hover (if needed) */
+}
+
+.use-case-card {
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    transition: box-shadow 0.3s;
+    background-color: #ffffff; /* White background for cards */
+}
+.use-case-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.use-case-icon {
+    font-size: 48px;
+    color: #0056b3;
+    margin-bottom: 15px;
+}

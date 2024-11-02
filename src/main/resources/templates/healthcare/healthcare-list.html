@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare ROI User Cases - Gokaddal Technologies</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/style.css">
+    <link rel="stylesheet" th:href="@{/style.css}" />
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="/api/placeholder/150/50" alt="Gokaddal Technologies" height="30">
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#">Find Solutions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Find Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">SME Solutions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Industries</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Knowledge Base</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Support</a></li>
+                </ul>
+                <button class="btn btn-outline-primary ms-2">Sign Up</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-5">Healthcare ROI User Cases</h1>
+        <div class="row g-4">
+            <div class="col-md-4">
+              <!-- <a href="smart-hospital.html" class="industry-link"></a> -->   
+                <div class="use-case-card">
+                    <div class="use-case-icon">🏥</div>
+                    <h3>Smart Hospital</h3>
+                    <!-- <a href="smart-hospital.html" class="btn btn-primary mt-3">Calculate</a> -->
+                </div>
+                <!-- </a> -->
+            </div>
+            <div class="col-md-4">
+                <a th:href="@{/healthcare/remote-patient-monitoring-form}" class="industry-link">
+                <div class="use-case-card">
+                  <div class="use-case-icon">📡</div>
+                  <h3>Remote Patient Monitoring</h3>
+                </div>
+              </a>
+            </div>
+            <div class="col-md-4">
+              <!-- <a href="smart-pharmacy.html" class="industry-link"></a> -->
+                <div class="use-case-card">
+                    <div class="use-case-icon">💊</div>
+                    <h3>Smart Pharmacy</h3>
+                    <!-- <a href="smart-pharmacy.html" class="btn btn-primary mt-3">Calculate</a> -->
+                </div>
+              <!-- </a> -->
+            </div>
+            <div class="col-md-4">
+              <!-- <a href="medical-asset-tracking.html" class="industry-link"></a> -->
+                <div class="use-case-card">
+                    <div class="use-case-icon">🔍</div>
+                    <h3>Medical Asset Tracking</h3>
+                    <!-- <a href="medical-asset-tracking.html" class="btn btn-primary mt-3">Calculate</a> -->
+                </div>
+              <!-- </a> -->
+            </div>
+            <div class="col-md-4">
+              <!-- <a href="smart-diagnostics.html" class="industry-link"></a> -->
+                <div class="use-case-card">
+                    <div class="use-case-icon">🩺</div>
+                    <h3>Smart Diagnostics</h3>
+                    <!-- <a href="smart-diagnostics.html" class="btn btn-primary mt-3">Calculate</a> -->
+                </div>
+              <!-- </a> -->
+            </div>
+            <div class="col-md-4">
+              <!-- <a href="telemedicine.html" class="industry-link"></a> -->
+                <div class="use-case-card">
+                    <div class="use-case-icon">📱</div>
+                    <h3>Telemedicine</h3>
+                    <!-- <a href="telemedicine.html" class="btn btn-primary mt-3">Calculate</a> -->
+                </div>
+              <!-- </a> -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+

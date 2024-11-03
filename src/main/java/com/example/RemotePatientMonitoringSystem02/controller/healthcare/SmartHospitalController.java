@@ -1,7 +1,9 @@
 package com.example.RemotePatientMonitoringSystem02.controller.healthcare;
 
+
 import com.example.RemotePatientMonitoringSystem02.entity.healthcare.RemotePatientMonitoringDevices;
-import com.example.RemotePatientMonitoringSystem02.service.healthcare.RemotePatientMonitoringService;
+import com.example.RemotePatientMonitoringSystem02.entity.healthcare.SmartHospitalDevices;
+import com.example.RemotePatientMonitoringSystem02.service.healthcare.SmartHospitalService;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
@@ -9,7 +11,6 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,43 +29,32 @@ import java.util.Arrays;
 import java.util.List;
 
 @Controller
-public class RemotePatientMonitoringController {
+public class SmartHospitalController {
 
-    @Autowired
-    private RemotePatientMonitoringService rpmService;
+    private final SmartHospitalService smartHospitalService;
 
-    public RemotePatientMonitoringController(RemotePatientMonitoringService rpmService) {
-        this.rpmService = rpmService;
+    public SmartHospitalController(SmartHospitalService smartHospitalService) {
+        this.smartHospitalService = smartHospitalService;
     }
 
-    @GetMapping("/")
-    public String showIndustriesList() {
-        return "industries-list";
-    }
 
-    @GetMapping("/healthcare/healthcare-list")
-    public String showHealthcareList(Model model) {
-        return "healthcare/healthcare-list"; // Name of the HTML file without extension
-    }
-
-    @GetMapping("/healthcare/remote-patient-monitoring-form")
+    @GetMapping("/healthcare/smart-hospital-form")
     public String showForm(Model model) {
-        List<RemotePatientMonitoringDevices> devices = rpmService.getAllDevices();
+        List<SmartHospitalDevices> devices = smartHospitalService.getAllDevices();
         model.addAttribute("devices", devices);
-        model.addAttribute("dynamicUrl", "/rpm/calculate-roi");
-        model.addAttribute("pageFormTitle", "Remote Patient Monitoring ROI Calculator");
+        model.addAttribute("dynamicUrl", "/smart-hospital/calculate-roi");
+        model.addAttribute("pageFormTitle", "Smart Hospital ROI Calculation");
         return "healthcare/remote-patient-monitoring-form";
     }
 
-
-    @PostMapping("/rpm/calculate-roi")
+    @PostMapping("/smart-hospital/calculate-roi")
     public String calculateROI(@RequestParam("quantities") String[] quantities,
                                @RequestParam("investmentPeriod") int investmentPeriod,
                                Model model) {
 
-        Logger logger = LoggerFactory.getLogger(RemotePatientMonitoringController.class);
+        Logger logger = LoggerFactory.getLogger(SmartHospitalController.class);
 
-        List<RemotePatientMonitoringDevices> devices = rpmService.getAllDevices();
+        List<SmartHospitalDevices> devices = smartHospitalService.getAllDevices();
         List<Integer> finalQuantities = new ArrayList<>();
 
         logger.info("Received quantities: {}", Arrays.toString(quantities));
@@ -84,9 +74,9 @@ public class RemotePatientMonitoringController {
         }
 
         // Perform ROI calculation
-        BigDecimal totalInvestmentCosts = rpmService.calculateTotalInvestment(devices, finalQuantities, investmentPeriod);
-        BigDecimal totalNetBenefit = rpmService.calculateTotalNetBenefit(devices, finalQuantities, investmentPeriod);
-        BigDecimal roi = rpmService.calculateROI(totalInvestmentCosts, totalNetBenefit);
+        BigDecimal totalInvestmentCosts = smartHospitalService.calculateTotalInvestment(devices, finalQuantities, investmentPeriod);
+        BigDecimal totalNetBenefit = smartHospitalService.calculateTotalNetBenefit(devices, finalQuantities, investmentPeriod);
+        BigDecimal roi = smartHospitalService.calculateROI(totalInvestmentCosts, totalNetBenefit);
 
         // Add calculated values to the model for display on the results page
         model.addAttribute("totalInvestmentCosts", totalInvestmentCosts);
@@ -96,9 +86,8 @@ public class RemotePatientMonitoringController {
 
         // Add cache-busting version (timestamp)
         model.addAttribute("imageVersion", System.currentTimeMillis());
-        model.addAttribute("pageResultTitle", "Remote Patient Monitoring ROI Calculation Results");
-
-        model.addAttribute("chartPath", "/rpm/chart(imageName='rpm_chart.png')");
+        model.addAttribute("pageResultTitle", "Smart Hospital ROI Calculation Results");
+        model.addAttribute("chartPath", "/smart-hospital/chart(imageName='rpm_chart.png')");
         // Generate the bar chart
         generateBarChart(totalInvestmentCosts, totalNetBenefit);
 
@@ -108,7 +97,7 @@ public class RemotePatientMonitoringController {
 
 
     // New method to serve the image
-    @GetMapping("/rpm/chart")
+    @GetMapping("/smart-hospital/chart")
     public ResponseEntity<FileSystemResource> getChart(@RequestParam("imageName") String imageName) {
         File imageFile = new File("src/main/resources/static/images/" + imageName);
 

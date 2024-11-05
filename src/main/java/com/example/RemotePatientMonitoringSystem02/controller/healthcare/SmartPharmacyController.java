@@ -1,9 +1,8 @@
 package com.example.RemotePatientMonitoringSystem02.controller.healthcare;
 
-
-import com.example.RemotePatientMonitoringSystem02.entity.healthcare.RemotePatientMonitoringDevices;
 import com.example.RemotePatientMonitoringSystem02.entity.healthcare.SmartHospitalDevices;
-import com.example.RemotePatientMonitoringSystem02.service.healthcare.SmartHospitalService;
+import com.example.RemotePatientMonitoringSystem02.entity.healthcare.SmartPharmacyDevices;
+import com.example.RemotePatientMonitoringSystem02.service.healthcare.SmartPharmacyService;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
@@ -29,32 +28,32 @@ import java.util.Arrays;
 import java.util.List;
 
 @Controller
-public class SmartHospitalController {
+public class SmartPharmacyController {
 
-    private final SmartHospitalService smartHospitalService;
+    private final SmartPharmacyService smartPharmacyService;
 
-    public SmartHospitalController(SmartHospitalService smartHospitalService) {
-        this.smartHospitalService = smartHospitalService;
+    public SmartPharmacyController(SmartPharmacyService smartPharmacyService) {
+        this.smartPharmacyService = smartPharmacyService;
     }
 
 
-    @GetMapping("/healthcare/smart-hospital-form")
+    @GetMapping("/healthcare/smart-pharmacy-form")
     public String showForm(Model model) {
-        List<SmartHospitalDevices> devices = smartHospitalService.getAllDevices();
+        List<SmartPharmacyDevices> devices = smartPharmacyService.getAllDevices();
         model.addAttribute("devices", devices);
-        model.addAttribute("dynamicUrl", "/smart-hospital/calculate-roi");
-        model.addAttribute("pageFormTitle", "Smart Hospital ROI Calculation");
+        model.addAttribute("dynamicUrl", "/smart-pharmacy/calculate-roi");
+        model.addAttribute("pageFormTitle", "Smart Pharmacy ROI Calculation");
         return "healthcare/remote-patient-monitoring-form";
     }
 
-    @PostMapping("/smart-hospital/calculate-roi")
+    @PostMapping("/smart-pharmacy/calculate-roi")
     public String calculateROI(@RequestParam("quantities") String[] quantities,
                                @RequestParam("investmentPeriod") int investmentPeriod,
                                Model model) {
 
         Logger logger = LoggerFactory.getLogger(SmartHospitalController.class);
 
-        List<SmartHospitalDevices> devices = smartHospitalService.getAllDevices();
+        List<SmartPharmacyDevices> devices = smartPharmacyService.getAllDevices();
         List<Integer> finalQuantities = new ArrayList<>();
 
         logger.info("Received quantities: {}", Arrays.toString(quantities));
@@ -74,9 +73,9 @@ public class SmartHospitalController {
         }
 
         // Perform ROI calculation
-        BigDecimal totalInvestmentCosts = smartHospitalService.calculateTotalInvestment(devices, finalQuantities, investmentPeriod);
-        BigDecimal totalNetBenefit = smartHospitalService.calculateTotalNetBenefit(devices, finalQuantities, investmentPeriod);
-        BigDecimal roi = smartHospitalService.calculateROI(totalInvestmentCosts, totalNetBenefit);
+        BigDecimal totalInvestmentCosts = smartPharmacyService.calculateTotalInvestment(devices, finalQuantities, investmentPeriod);
+        BigDecimal totalNetBenefit = smartPharmacyService.calculateTotalNetBenefit(devices, finalQuantities, investmentPeriod);
+        BigDecimal roi = smartPharmacyService.calculateROI(totalInvestmentCosts, totalNetBenefit);
 
         // Add calculated values to the model for display on the results page
         model.addAttribute("totalInvestmentCosts", totalInvestmentCosts);
@@ -86,13 +85,13 @@ public class SmartHospitalController {
 
         // Add cache-busting version (timestamp)
         model.addAttribute("imageVersion", System.currentTimeMillis());
-        model.addAttribute("pageResultTitle", "Smart Hospital ROI Calculation Results");
+        model.addAttribute("pageResultTitle", "Smart Pharmacy ROI Calculation Results");
 
 
 //        String chartPath = "/smart-hospital/chart?imageName=smart_hospital_chart.png"; // Use query parameter for the image name
 //        model.addAttribute("chartPath", chartPath);
 
-        String chartPath = "/smart-hospital/chart?imageName=smart_hospital_chart.png";
+        String chartPath = "/smart-pharmacy/chart?imageName=smart_pharmacy_chart.png";
         model.addAttribute("chartPath", chartPath);
 //        model.addAttribute("chartPath", "/smart-hospital/chart(imageName='smart_hospital_chart.png')");
         // Generate the bar chart
@@ -102,9 +101,8 @@ public class SmartHospitalController {
         return "healthcare/remote-patient-monitoring-ROI";
     }
 
-
     // New method to serve the image
-    @GetMapping("/smart-hospital/chart")
+    @GetMapping("/smart-pharmacy/chart")
     public ResponseEntity<FileSystemResource> getChart(@RequestParam("imageName") String imageName) {
         File imageFile = new File("src/main/resources/static/images/" + imageName);
 
@@ -132,7 +130,7 @@ public class SmartHospitalController {
 
         try {
             // Save the chart as an image file
-            ChartUtils.saveChartAsPNG(new File("src/main/resources/static/images/smart_hospital_chart.png"), barChart, 500, 300);
+            ChartUtils.saveChartAsPNG(new File("src/main/resources/static/images/smart_pharmacy_chart.png"), barChart, 500, 300);
         } catch (IOException e) {
             e.printStackTrace(); // Handle exceptions appropriately in production
         }
@@ -145,5 +143,6 @@ public class SmartHospitalController {
         dataset.addValue(totalNetBenefiti, "Benefits", "Total Net Benefit");
         return dataset;
     }
+
 
 }

@@ -67,7 +67,8 @@
             <h3 class="mt-4">ROI Bar Chart:</h3>
 <!--            <img src="/images/rpm_chart.png" alt="ROI Bar Chart" class="img-fluid mt-3"> &lt;!&ndash; Added margin top &ndash;&gt;-->
 <!--            <img th:src="@{/images/rpm_chart.png(ts=${imageVersion})}" alt="ROI Bar Chart" class="img-fluid mt-3">-->
-            <img th:src="@{/rpm/chart(imageName='rpm_chart.png')}" alt="ROI Bar Chart" class="img-fluid mt-3">
+<!--            <img th:src="@{/rpm/chart(imageName='rpm_chart.png')}" alt="ROI Bar Chart" class="img-fluid mt-3">-->
+            <img th:src="@{${chartPath}}" alt="ROI Bar Chart" class="img-fluid mt-3">
 
         </div>
     </div>

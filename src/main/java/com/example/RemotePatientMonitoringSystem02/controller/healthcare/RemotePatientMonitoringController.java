@@ -98,7 +98,10 @@ public class RemotePatientMonitoringController {
         model.addAttribute("imageVersion", System.currentTimeMillis());
         model.addAttribute("pageResultTitle", "Remote Patient Monitoring ROI Calculation Results");
 
-        model.addAttribute("chartPath", "/rpm/chart(imageName='rpm_chart.png')");
+        String chartPath = "/rpm/chart?imageName=rpm_chart.png"; // Use query parameter for the image name
+        model.addAttribute("chartPath", chartPath);
+
+//        model.addAttribute("chartPath", "/rpm/chart(imageName='rpm_chart.png')");
         // Generate the bar chart
         generateBarChart(totalInvestmentCosts, totalNetBenefit);
 

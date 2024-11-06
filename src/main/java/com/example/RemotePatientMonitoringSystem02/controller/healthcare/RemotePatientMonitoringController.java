@@ -1,6 +1,7 @@
 package com.example.RemotePatientMonitoringSystem02.controller.healthcare;
 
 import com.example.RemotePatientMonitoringSystem02.entity.healthcare.RemotePatientMonitoringDevices;
+import com.example.RemotePatientMonitoringSystem02.service.healthcare.PdfReportService;
 import com.example.RemotePatientMonitoringSystem02.service.healthcare.RemotePatientMonitoringService;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtils;
@@ -32,9 +33,11 @@ public class RemotePatientMonitoringController {
 
     @Autowired
     private RemotePatientMonitoringService rpmService;
+    private PdfReportService pdfReportService;
 
-    public RemotePatientMonitoringController(RemotePatientMonitoringService rpmService) {
+    public RemotePatientMonitoringController(RemotePatientMonitoringService rpmService, PdfReportService pdfReportService) {
         this.rpmService = rpmService;
+        this.pdfReportService = pdfReportService;
     }
 
     @GetMapping("/")
@@ -153,4 +156,40 @@ public class RemotePatientMonitoringController {
         return dataset;
     }
 
+
+
+    @GetMapping("/rpm/generate-pdf")
+    public ResponseEntity<byte[]> generatePdfReport(@RequestParam("quantities") String[] quantities,
+                                                    @RequestParam("investmentPeriod") int investmentPeriod) {
+        List<RemotePatientMonitoringDevices> devices = rpmService.getAllDevices();
+        List<Integer> finalQuantities = new ArrayList<>();
+
+        for (int i = 0; i < devices.size(); i++) {
+            String quantityStr = (i < quantities.length) ? quantities[i] : "";
+            int quantity;
+            try {
+                quantity = (quantityStr == null || quantityStr.isEmpty()) ? devices.get(i).getDefaultQuantity() : Integer.parseInt(quantityStr);
+            } catch (NumberFormatException e) {
+                quantity = devices.get(i).getDefaultQuantity();
+            }
+            finalQuantities.add(quantity);
+        }
+
+        BigDecimal totalInvestmentCosts = rpmService.calculateTotalInvestment(devices, finalQuantities, investmentPeriod);
+        BigDecimal totalNetBenefit = rpmService.calculateTotalNetBenefit(devices, finalQuantities, investmentPeriod);
+        BigDecimal roi = rpmService.calculateROI(totalInvestmentCosts, totalNetBenefit);
+
+        String title = "Remote Patient Monitoring ROI Report";
+        String content = "Total Investment Costs: " + totalInvestmentCosts + "\n" +
+                "Total Net Benefit: " + totalNetBenefit + "\n" +
+                "ROI: " + roi;
+
+        byte[] pdfBytes = pdfReportService.generateReport(title, content);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=roi_report.pdf");
+        headers.add(HttpHeaders.CONTENT_TYPE, "application/pdf");
+
+        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+    }
 }

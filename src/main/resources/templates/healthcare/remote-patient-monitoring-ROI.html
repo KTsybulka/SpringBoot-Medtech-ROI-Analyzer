@@ -75,7 +75,8 @@
 
     <hr>
 
-    <a class="btn btn-secondary" th:href="@{/healthcare/remote-patient-monitoring-form}">Back to Form</a>
+<!--    <a class="btn btn-secondary" th:href="@{/healthcare/remote-patient-monitoring-form}">Back to Form</a>-->
+    <a class="btn btn-secondary" th:href="@{${backToFormPath}}">Back to Form</a>
 <!--    <a class="btn btn-secondary" th:href="@{/rpm/generate-pdf}">Create Report (PDF)</a>-->
     <a class="btn btn-secondary" th:href="@{/rpm/generate-pdf(quantities=${quantities}, investmentPeriod=${investmentPeriod})}">Create Report (PDF)</a>
 <!--    <a class="btn btn-secondary" th:href="@{/healthcare/rpm-report}">Create Report (PDF)</a>-->

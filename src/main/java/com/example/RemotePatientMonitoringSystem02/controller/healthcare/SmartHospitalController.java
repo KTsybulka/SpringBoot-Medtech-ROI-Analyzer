@@ -94,6 +94,10 @@ public class SmartHospitalController {
 
         String chartPath = "/smart-hospital/chart?imageName=smart_hospital_chart.png";
         model.addAttribute("chartPath", chartPath);
+
+        //link to back to form
+        String backToFormPath= "/healthcare/smart-hospital-form";
+        model.addAttribute("backToFormPath", backToFormPath);
 //        model.addAttribute("chartPath", "/smart-hospital/chart(imageName='smart_hospital_chart.png')");
         // Generate the bar chart
         generateBarChart(totalInvestmentCosts, totalNetBenefit);

@@ -104,6 +104,10 @@ public class RemotePatientMonitoringController {
         String chartPath = "/rpm/chart?imageName=rpm_chart.png"; // Use query parameter for the image name
         model.addAttribute("chartPath", chartPath);
 
+
+        //link to back to form
+        String backToFormPath= "/healthcare/remote-patient-monitoring-form";
+        model.addAttribute("backToFormPath", backToFormPath);
 //        model.addAttribute("chartPath", "/rpm/chart(imageName='rpm_chart.png')");
         // Generate the bar chart
         generateBarChart(totalInvestmentCosts, totalNetBenefit);

@@ -1,9 +1,8 @@
 package com.example.RemotePatientMonitoringSystem02.controller.healthcare;
 
-
-import com.example.RemotePatientMonitoringSystem02.entity.healthcare.RemotePatientMonitoringDevices;
-import com.example.RemotePatientMonitoringSystem02.entity.healthcare.SmartHospitalDevices;
-import com.example.RemotePatientMonitoringSystem02.service.healthcare.SmartHospitalService;
+import com.example.RemotePatientMonitoringSystem02.entity.healthcare.MedicalAssetTrackingDevices;
+import com.example.RemotePatientMonitoringSystem02.entity.healthcare.SmartPharmacyDevices;
+import com.example.RemotePatientMonitoringSystem02.service.healthcare.MedicalAssetTrackingService;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
@@ -29,32 +28,31 @@ import java.util.Arrays;
 import java.util.List;
 
 @Controller
-public class SmartHospitalController {
+public class MedicalAssetTrackingController {
+    private final MedicalAssetTrackingService medicalAssetTrackingService;
 
-    private final SmartHospitalService smartHospitalService;
-
-    public SmartHospitalController(SmartHospitalService smartHospitalService) {
-        this.smartHospitalService = smartHospitalService;
+    public MedicalAssetTrackingController(MedicalAssetTrackingService medicalAssetTrackingService) {
+        this.medicalAssetTrackingService = medicalAssetTrackingService;
     }
 
 
-    @GetMapping("/healthcare/smart-hospital-form")
+    @GetMapping("/healthcare/medical-asset-tracking-form")
     public String showForm(Model model) {
-        List<SmartHospitalDevices> devices = smartHospitalService.getAllDevices();
+        List<MedicalAssetTrackingDevices> devices = medicalAssetTrackingService.getAllDevices();
         model.addAttribute("devices", devices);
-        model.addAttribute("dynamicUrl", "/smart-hospital/calculate-roi");
-        model.addAttribute("pageFormTitle", "Smart Hospital ROI Calculation");
+        model.addAttribute("dynamicUrl", "/medical-asset-tracking/calculate-roi");
+        model.addAttribute("pageFormTitle", "Medical Asset Tracking ROI Calculation");
         return "healthcare/remote-patient-monitoring-form";
     }
 
-    @PostMapping("/smart-hospital/calculate-roi")
+    @PostMapping("/medical-asset-tracking/calculate-roi")
     public String calculateROI(@RequestParam("quantities") String[] quantities,
                                @RequestParam("investmentPeriod") int investmentPeriod,
                                Model model) {
 
-        Logger logger = LoggerFactory.getLogger(SmartHospitalController.class);
+        Logger logger = LoggerFactory.getLogger(MedicalAssetTrackingController.class);
 
-        List<SmartHospitalDevices> devices = smartHospitalService.getAllDevices();
+        List<MedicalAssetTrackingDevices> devices = medicalAssetTrackingService.getAllDevices();
         List<Integer> finalQuantities = new ArrayList<>();
 
         logger.info("Received quantities: {}", Arrays.toString(quantities));
@@ -74,9 +72,9 @@ public class SmartHospitalController {
         }
 
         // Perform ROI calculation
-        BigDecimal totalInvestmentCosts = smartHospitalService.calculateTotalInvestment(devices, finalQuantities, investmentPeriod);
-        BigDecimal totalNetBenefit = smartHospitalService.calculateTotalNetBenefit(devices, finalQuantities, investmentPeriod);
-        BigDecimal roi = smartHospitalService.calculateROI(totalInvestmentCosts, totalNetBenefit);
+        BigDecimal totalInvestmentCosts = medicalAssetTrackingService.calculateTotalInvestment(devices, finalQuantities, investmentPeriod);
+        BigDecimal totalNetBenefit = medicalAssetTrackingService.calculateTotalNetBenefit(devices, finalQuantities, investmentPeriod);
+        BigDecimal roi = medicalAssetTrackingService.calculateROI(totalInvestmentCosts, totalNetBenefit);
 
         // Add calculated values to the model for display on the results page
         model.addAttribute("totalInvestmentCosts", totalInvestmentCosts);
@@ -86,14 +84,19 @@ public class SmartHospitalController {
 
         // Add cache-busting version (timestamp)
         model.addAttribute("imageVersion", System.currentTimeMillis());
-        model.addAttribute("pageResultTitle", "Smart Hospital ROI Calculation Results");
+        model.addAttribute("pageResultTitle", "Medical Asset Tracking ROI Calculation Results");
 
-        String chartPath = "/smart-hospital/chart?imageName=smart_hospital_chart.png";
+
+//        String chartPath = "/smart-hospital/chart?imageName=smart_hospital_chart.png"; // Use query parameter for the image name
+//        model.addAttribute("chartPath", chartPath);
+
+        String chartPath = "/medical-asset-tracking/chart?imageName=medical-asset-tracking_chart.png";
         model.addAttribute("chartPath", chartPath);
 
         //link to back to form
-        String backToFormPath= "/healthcare/smart-hospital-form";
+        String backToFormPath= "/healthcare/medical-asset-tracking-form";
         model.addAttribute("backToFormPath", backToFormPath);
+
 //        model.addAttribute("chartPath", "/smart-hospital/chart(imageName='smart_hospital_chart.png')");
         // Generate the bar chart
         generateBarChart(totalInvestmentCosts, totalNetBenefit);
@@ -102,9 +105,8 @@ public class SmartHospitalController {
         return "healthcare/remote-patient-monitoring-ROI";
     }
 
-
     // New method to serve the image
-    @GetMapping("/smart-hospital/chart")
+    @GetMapping("/medical-asset-tracking/chart")
     public ResponseEntity<FileSystemResource> getChart(@RequestParam("imageName") String imageName) {
         File imageFile = new File("src/main/resources/static/images/" + imageName);
 
@@ -121,7 +123,7 @@ public class SmartHospitalController {
 
     // Method to generate the bar chart
     private void generateBarChart(BigDecimal totalInvestmentCosts, BigDecimal totalNetBenefit) {
-        CategoryDataset dataset = createDataset(totalInvestmentCosts,totalNetBenefit);
+        CategoryDataset dataset = createDataset(totalInvestmentCosts, totalNetBenefit);
 
         JFreeChart barChart = ChartFactory.createBarChart(
                 "ROI Analysis",
@@ -131,12 +133,29 @@ public class SmartHospitalController {
         );
 
         try {
+            // Ensure the directory exists
+            File directory = new File("src/main/resources/static/images/");
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+
             // Save the chart as an image file
-            ChartUtils.saveChartAsPNG(new File("src/main/resources/static/images/smart_hospital_chart.png"), barChart, 500, 300);
+            File chartFile = new File(directory, "medical-asset-tracking_chart.png");
+            ChartUtils.saveChartAsPNG(chartFile, barChart, 500, 300);
+
+            // Log the file path
+            Logger logger = LoggerFactory.getLogger(MedicalAssetTrackingController.class);
+            logger.info("Chart saved at: " + chartFile.getAbsolutePath());
         } catch (IOException e) {
             e.printStackTrace(); // Handle exceptions appropriately in production
         }
+
+
     }
+
+
+
+
 
     // Method to create the dataset for the bar chart_two valueas
     private CategoryDataset createDataset(BigDecimal totalInvestmentCosts, BigDecimal totalNetBenefiti) {
@@ -145,5 +164,4 @@ public class SmartHospitalController {
         dataset.addValue(totalNetBenefiti, "Benefits", "Total Net Benefit");
         return dataset;
     }
-
 }

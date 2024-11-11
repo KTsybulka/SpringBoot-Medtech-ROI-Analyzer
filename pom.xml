@@ -65,6 +65,13 @@
 			<version>1.5.3</version>
 		</dependency>
 
+<!--		the Flyway dependency-->
+<!--		<dependency>-->
+<!--			<groupId>org.flywaydb</groupId>-->
+<!--			<artifactId>flyway-core</artifactId>-->
+<!--		</dependency>-->
+
+
 <!--		Add the iText dependency-->
 		<dependency>
 			<groupId>com.itextpdf</groupId>

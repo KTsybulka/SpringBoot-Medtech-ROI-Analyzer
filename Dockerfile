@@ -4,15 +4,18 @@ FROM openjdk:17-jdk-slim
 # Set the working directory
 WORKDIR /app
 
-# Copy Maven wrapper and pom.xml (to cache dependencies)
+# Copy Maven wrapper and pom.xml to cache dependencies
 COPY .mvn/ .mvn
 COPY pom.xml .
 COPY mvnw .
 
+# Grant execute permission to the Maven wrapper script
+RUN chmod +x mvnw
+
 # Install dependencies and build the project (skipping tests for faster build)
 RUN ./mvnw clean install -DskipTests
 
-# Copy the built JAR to the container
+# Copy the built JAR file to the container
 COPY target/*.jar app.jar
 
 # Expose the port your Spring Boot app runs on (default is 8080)

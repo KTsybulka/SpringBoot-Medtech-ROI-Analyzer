@@ -1,7 +1,6 @@
-# Use an official OpenJDK runtime as a parent image
-FROM openjdk:17-jdk-slim
+# Stage 1: Build the application
+FROM openjdk:17-jdk-slim AS build
 
-# Set the working directory
 WORKDIR /app
 
 # Copy Maven wrapper and pom.xml to cache dependencies
@@ -13,10 +12,16 @@ COPY mvnw .
 RUN chmod +x mvnw
 
 # Install dependencies and build the project (skipping tests for faster build)
-RUN ./mvnw clean install -DskipTests
+COPY src/ src/
+RUN ./mvnw clean package -DskipTests
 
-# Copy the built JAR file to the container
-COPY target/*.jar app.jar
+# Stage 2: Run the application
+FROM openjdk:17-jdk-slim
+
+WORKDIR /app
+
+# Copy only the built JAR file from the previous stage
+COPY --from=build /app/target/RemotePatientMonitoringSystem02-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose the port your Spring Boot app runs on (default is 8080)
 EXPOSE 8080

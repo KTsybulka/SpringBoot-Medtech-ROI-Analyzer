@@ -97,6 +97,8 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+<!--					Added for deploymtnt-->
+					<mainClass>com.example.RemotePatientMonitoringSystem02.RemotePatientMonitoringSystem02Application</mainClass>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>

@@ -4,8 +4,16 @@ FROM openjdk:17-jdk-slim
 # Set the working directory
 WORKDIR /app
 
-# Copy the application JAR file to the container
-COPY target/RemotePatientMonitoringSystem02-0.0.1-SNAPSHOT.jar app.jar
+# Copy Maven wrapper and pom.xml (to cache dependencies)
+COPY .mvn/ .mvn
+COPY pom.xml .
+COPY mvnw .
+
+# Install dependencies and build the project (skipping tests for faster build)
+RUN ./mvnw clean install -DskipTests
+
+# Copy the built JAR to the container
+COPY target/*.jar app.jar
 
 # Expose the port your Spring Boot app runs on (default is 8080)
 EXPOSE 8080

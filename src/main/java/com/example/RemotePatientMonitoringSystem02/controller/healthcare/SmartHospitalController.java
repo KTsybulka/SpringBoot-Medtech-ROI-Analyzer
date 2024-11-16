@@ -1,7 +1,6 @@
 package com.example.RemotePatientMonitoringSystem02.controller.healthcare;
 
 
-import com.example.RemotePatientMonitoringSystem02.entity.healthcare.RemotePatientMonitoringDevices;
 import com.example.RemotePatientMonitoringSystem02.entity.healthcare.SmartHospitalDevices;
 import com.example.RemotePatientMonitoringSystem02.service.healthcare.SmartHospitalService;
 import org.jfree.chart.ChartFactory;
@@ -44,7 +43,7 @@ public class SmartHospitalController {
         model.addAttribute("devices", devices);
         model.addAttribute("dynamicUrl", "/smart-hospital/calculate-roi");
         model.addAttribute("pageFormTitle", "Smart Hospital ROI Calculation");
-        return "healthcare/remote-patient-monitoring-form";
+        return "healthcare/healthcare-list-form";
     }
 
     @PostMapping("/smart-hospital/calculate-roi")
@@ -99,7 +98,7 @@ public class SmartHospitalController {
         generateBarChart(totalInvestmentCosts, totalNetBenefit);
 
         // Return the view name
-        return "healthcare/remote-patient-monitoring-ROI";
+        return "healthcare/healthcare-ROI-result";
     }
 
 

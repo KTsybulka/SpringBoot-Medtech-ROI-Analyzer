@@ -2,7 +2,6 @@ package com.example.RemotePatientMonitoringSystem02.service.healthcare;
 
 
 import com.example.RemotePatientMonitoringSystem02.entity.healthcare.MedicalAssetTrackingDevices;
-import com.example.RemotePatientMonitoringSystem02.entity.healthcare.SmartPharmacyDevices;
 import com.example.RemotePatientMonitoringSystem02.repository.healthcare.MedicalAssetTrackingRepository;
 import org.springframework.stereotype.Service;
 

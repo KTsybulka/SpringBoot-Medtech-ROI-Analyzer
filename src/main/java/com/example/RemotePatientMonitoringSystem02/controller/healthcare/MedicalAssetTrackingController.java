@@ -1,7 +1,6 @@
 package com.example.RemotePatientMonitoringSystem02.controller.healthcare;
 
 import com.example.RemotePatientMonitoringSystem02.entity.healthcare.MedicalAssetTrackingDevices;
-import com.example.RemotePatientMonitoringSystem02.entity.healthcare.SmartPharmacyDevices;
 import com.example.RemotePatientMonitoringSystem02.service.healthcare.MedicalAssetTrackingService;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtils;
@@ -42,7 +41,7 @@ public class MedicalAssetTrackingController {
         model.addAttribute("devices", devices);
         model.addAttribute("dynamicUrl", "/medical-asset-tracking/calculate-roi");
         model.addAttribute("pageFormTitle", "Medical Asset Tracking ROI Calculation");
-        return "healthcare/remote-patient-monitoring-form";
+        return "healthcare/healthcare-list-form";
     }
 
     @PostMapping("/medical-asset-tracking/calculate-roi")
@@ -102,7 +101,7 @@ public class MedicalAssetTrackingController {
         generateBarChart(totalInvestmentCosts, totalNetBenefit);
 
         // Return the view name
-        return "healthcare/remote-patient-monitoring-ROI";
+        return "healthcare/healthcare-ROI-result";
     }
 
     // New method to serve the image

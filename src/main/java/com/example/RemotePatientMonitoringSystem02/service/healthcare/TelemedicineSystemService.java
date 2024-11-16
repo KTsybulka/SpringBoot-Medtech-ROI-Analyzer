@@ -1,7 +1,8 @@
 package com.example.RemotePatientMonitoringSystem02.service.healthcare;
 
-import com.example.RemotePatientMonitoringSystem02.entity.healthcare.SmartDiagnosticsSystemDevices;
-import com.example.RemotePatientMonitoringSystem02.repository.healthcare.SmartDiagnosticsSystemRepository;
+import com.example.RemotePatientMonitoringSystem02.entity.healthcare.SmartPharmacyDevices;
+import com.example.RemotePatientMonitoringSystem02.entity.healthcare.TelemedicineSystemDevices;
+import com.example.RemotePatientMonitoringSystem02.repository.healthcare.TelemedicineSystemRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -9,22 +10,24 @@ import java.math.RoundingMode;
 import java.util.List;
 
 @Service
-public class SmartDiagnosticsSystemService {
+public class TelemedicineSystemService {
 
-    private final SmartDiagnosticsSystemRepository smartDiagnosticsSystemRepository;
+    private final TelemedicineSystemRepository telemedicineSystemRepository;
 
-    public SmartDiagnosticsSystemService(SmartDiagnosticsSystemRepository smartDiagnosticsSystemRepository) {
-        this.smartDiagnosticsSystemRepository = smartDiagnosticsSystemRepository;
+    public TelemedicineSystemService(TelemedicineSystemRepository telemedicineSystemRepository) {
+        this.telemedicineSystemRepository = telemedicineSystemRepository;
     }
 
-    public List<SmartDiagnosticsSystemDevices> getAllDevices() {
-        return smartDiagnosticsSystemRepository.findAll();
+
+
+    public List<TelemedicineSystemDevices> getAllDevices(){
+        return telemedicineSystemRepository.findAll();
     }
 
-    public BigDecimal calculateTotalInvestment(List<SmartDiagnosticsSystemDevices> devices, List<Integer> quantities, int investmentPeriod) {
+    public BigDecimal calculateTotalInvestment(List<TelemedicineSystemDevices> devices, List<Integer> quantities, int investmentPeriod) {
         BigDecimal totalInvestment = BigDecimal.ZERO;
         for (int i = 0; i < devices.size(); i++) {
-            SmartDiagnosticsSystemDevices device = devices.get(i);
+            TelemedicineSystemDevices device = devices.get(i);
             int quantity = quantities.get(i) != null ? quantities.get(i) : device.getDefaultQuantity();
 
             // Initial investment per device type
@@ -38,10 +41,10 @@ public class SmartDiagnosticsSystemService {
         return totalInvestment;
     }
 
-    public BigDecimal calculateTotalNetBenefit(List<SmartDiagnosticsSystemDevices> devices, List<Integer> quantities, int investmentPeriod) {
+    public BigDecimal calculateTotalNetBenefit(List<TelemedicineSystemDevices> devices, List<Integer> quantities, int investmentPeriod) {
         BigDecimal totalBenefit = BigDecimal.ZERO;
         for (int i = 0; i < devices.size(); i++) {
-            SmartDiagnosticsSystemDevices device = devices.get(i);
+            TelemedicineSystemDevices device = devices.get(i);
             int quantity = quantities.get(i) != null ? quantities.get(i) : device.getDefaultQuantity();
 
             // Annual benefit from sales, efficiency, and customer engagement
@@ -61,4 +64,5 @@ public class SmartDiagnosticsSystemService {
                 .divide(totalInvestmentCosts, RoundingMode.HALF_UP)
                 .multiply(BigDecimal.valueOf(100));
     }
+
 }

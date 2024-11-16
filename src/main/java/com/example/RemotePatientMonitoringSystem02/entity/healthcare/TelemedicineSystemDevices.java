@@ -11,11 +11,12 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class SmartDiagnosticsSystemDevices {
+public class TelemedicineSystemDevices {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

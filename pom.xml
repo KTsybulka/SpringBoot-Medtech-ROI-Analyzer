@@ -73,11 +73,7 @@
 
 
 <!--Azure Cloude-->
-		<dependency>
-			<groupId>com.microsoft.sqlserver</groupId>
-			<artifactId>mssql-jdbc</artifactId>
-			<version>12.2.0.jre11</version> <!-- Ensure this version is compatible with your Java version -->
-		</dependency>
+
 <!--		Add the iText dependency-->
 		<dependency>
 			<groupId>com.itextpdf</groupId>

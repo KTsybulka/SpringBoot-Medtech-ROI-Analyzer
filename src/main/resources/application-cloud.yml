@@ -1,0 +1,23 @@
+application:
+  name: roi-calculator-CLOUD
+
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}?useSSL=true&requireSSL=true
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+#  flyway:
+#    enabled: true  # Enables Flyway for automatic migration handling
+#
+#    # Configure Flyway to look in specific folders for each industry's migrations.
+#    locations:
+#      - classpath:db/migration/healthcare    # Migrations specific to Healthcare
+#      - classpath:db/migration/retail        # Migrations specific to Retail
+#      - classpath:db/migration/finance       # Migrations specific to Finance
+

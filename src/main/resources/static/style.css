@@ -66,3 +66,39 @@ button {
     color: #0056b3;
     margin-bottom: 15px;
 }
+
+/* Blurred effect for "under development" cards */
+.industry-card {
+    position: relative;
+    overflow: hidden; /* Ensures overlay doesn't exceed the card */
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.under-development {
+    position: relative;
+    filter: blur(1px); /* Reduce the blur */
+    pointer-events: none; /* Prevent interaction with blurred content */
+    opacity: 0.8; /* Slightly dim the card */
+}
+
+.blur-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3); /* Slightly darker background for visibility */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1.2em; /* Adjusted for better readability */
+    font-weight: bold;
+    text-transform: uppercase;
+    z-index: 1; /* Ensures overlay appears above content */
+    pointer-events: none; /* Prevent interaction */
+}

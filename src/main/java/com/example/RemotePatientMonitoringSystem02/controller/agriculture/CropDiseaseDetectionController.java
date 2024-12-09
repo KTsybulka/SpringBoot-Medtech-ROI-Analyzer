@@ -1,8 +1,9 @@
-package com.example.RemotePatientMonitoringSystem02.controller.healthcare;
+package com.example.RemotePatientMonitoringSystem02.controller.agriculture;
 
-import com.example.RemotePatientMonitoringSystem02.entity.healthcare.RemotePatientMonitoringDevices;
-import com.example.RemotePatientMonitoringSystem02.service.healthcare.PdfReportService;
-import com.example.RemotePatientMonitoringSystem02.service.healthcare.RemotePatientMonitoringService;
+import com.example.RemotePatientMonitoringSystem02.controller.healthcare.MedicalAssetTrackingController;
+import com.example.RemotePatientMonitoringSystem02.entity.agriculture.CropDiseaseDetectionDevices;
+import com.example.RemotePatientMonitoringSystem02.entity.healthcare.MedicalAssetTrackingDevices;
+import com.example.RemotePatientMonitoringSystem02.service.agriculture.CropDiseaseDetectionService;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
@@ -10,7 +11,6 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -29,45 +29,30 @@ import java.util.Arrays;
 import java.util.List;
 
 @Controller
-public class RemotePatientMonitoringController {
+public class CropDiseaseDetectionController {
+    private final CropDiseaseDetectionService cropDiseaseDetectionService;
 
-    @Autowired
-    private RemotePatientMonitoringService rpmService;
-    private PdfReportService pdfReportService;
-
-    public RemotePatientMonitoringController(RemotePatientMonitoringService rpmService, PdfReportService pdfReportService) {
-        this.rpmService = rpmService;
-        this.pdfReportService = pdfReportService;
+    public CropDiseaseDetectionController(CropDiseaseDetectionService cropDiseaseDetectionService) {
+        this.cropDiseaseDetectionService = cropDiseaseDetectionService;
     }
 
-    @GetMapping("/")
-    public String showIndustriesList() {
-        return "industries-list";
-    }
-
-//    @GetMapping("/healthcare/healthcare-list")
-//    public String showHealthcareList(Model model) {
-//        return "healthcare/healthcare-list"; // Name of the HTML file without extension
-//    }
-
-    @GetMapping("/healthcare/remote-patient-monitoring-form")
+    @GetMapping("/agriculture/crop-disease-detection-form")
     public String showForm(Model model) {
-        List<RemotePatientMonitoringDevices> devices = rpmService.getAllDevices();
+        List<CropDiseaseDetectionDevices> devices = cropDiseaseDetectionService.getAllDevices();
         model.addAttribute("devices", devices);
-        model.addAttribute("dynamicUrl", "/rpm/calculate-roi");
-        model.addAttribute("pageFormTitle", "Remote Patient Monitoring ROI Calculator");
+        model.addAttribute("dynamicUrl", "/crop-disease-detection/calculate-roi");
+        model.addAttribute("pageFormTitle", "Crop Disease Detection ROI Calculation");
         return "healthcare/healthcare-list-form";
     }
 
-
-    @PostMapping("/rpm/calculate-roi")
+    @PostMapping("/crop-disease-detection/calculate-roi")
     public String calculateROI(@RequestParam("quantities") String[] quantities,
                                @RequestParam("investmentPeriod") int investmentPeriod,
                                Model model) {
 
-        Logger logger = LoggerFactory.getLogger(RemotePatientMonitoringController.class);
+        Logger logger = LoggerFactory.getLogger(CropDiseaseDetectionController.class);
 
-        List<RemotePatientMonitoringDevices> devices = rpmService.getAllDevices();
+        List<CropDiseaseDetectionDevices> devices = cropDiseaseDetectionService.getAllDevices();
         List<Integer> finalQuantities = new ArrayList<>();
 
         logger.info("Received quantities: {}", Arrays.toString(quantities));
@@ -87,9 +72,9 @@ public class RemotePatientMonitoringController {
         }
 
         // Perform ROI calculation
-        BigDecimal totalInvestmentCosts = rpmService.calculateTotalInvestment(devices, finalQuantities, investmentPeriod);
-        BigDecimal totalNetBenefit = rpmService.calculateTotalNetBenefit(devices, finalQuantities, investmentPeriod);
-        BigDecimal roi = rpmService.calculateROI(totalInvestmentCosts, totalNetBenefit);
+        BigDecimal totalInvestmentCosts = cropDiseaseDetectionService.calculateTotalInvestment(devices, finalQuantities, investmentPeriod);
+        BigDecimal totalNetBenefit = cropDiseaseDetectionService.calculateTotalNetBenefit(devices, finalQuantities, investmentPeriod);
+        BigDecimal roi = cropDiseaseDetectionService.calculateROI(totalInvestmentCosts, totalNetBenefit);
 
         // Add calculated values to the model for display on the results page
         model.addAttribute("totalInvestmentCosts", totalInvestmentCosts);
@@ -99,16 +84,20 @@ public class RemotePatientMonitoringController {
 
         // Add cache-busting version (timestamp)
         model.addAttribute("imageVersion", System.currentTimeMillis());
-        model.addAttribute("pageResultTitle", "Remote Patient Monitoring ROI Calculation Results");
+        model.addAttribute("pageResultTitle", "Crop Disease Detection ROI Calculation Results");
 
-        String chartPath = "/rpm/chart?imageName=rpm_chart.png"; // Use query parameter for the image name
+
+//        String chartPath = "/smart-hospital/chart?imageName=smart_hospital_chart.png"; // Use query parameter for the image name
+//        model.addAttribute("chartPath", chartPath);
+
+        String chartPath = "/crop-disease-detection/chart?imageName=crop-disease-detection_chart.png";
         model.addAttribute("chartPath", chartPath);
 
-
         //link to back to form
-        String backToFormPath= "/healthcare/remote-patient-monitoring-form";
+        String backToFormPath= "/agriculture/crop-disease-detection-form";
         model.addAttribute("backToFormPath", backToFormPath);
-//        model.addAttribute("chartPath", "/rpm/chart(imageName='rpm_chart.png')");
+
+//        model.addAttribute("chartPath", "/smart-hospital/chart(imageName='smart_hospital_chart.png')");
         // Generate the bar chart
         generateBarChart(totalInvestmentCosts, totalNetBenefit);
 
@@ -116,9 +105,8 @@ public class RemotePatientMonitoringController {
         return "healthcare/healthcare-ROI-result";
     }
 
-
     // New method to serve the image
-    @GetMapping("/rpm/chart")
+    @GetMapping("/crop-disease-detection/chart")
     public ResponseEntity<FileSystemResource> getChart(@RequestParam("imageName") String imageName) {
         File imageFile = new File("src/main/resources/static/images/" + imageName);
 
@@ -135,7 +123,7 @@ public class RemotePatientMonitoringController {
 
     // Method to generate the bar chart
     private void generateBarChart(BigDecimal totalInvestmentCosts, BigDecimal totalNetBenefit) {
-        CategoryDataset dataset = createDataset(totalInvestmentCosts,totalNetBenefit);
+        CategoryDataset dataset = createDataset(totalInvestmentCosts, totalNetBenefit);
 
         JFreeChart barChart = ChartFactory.createBarChart(
                 "ROI Analysis",
@@ -145,12 +133,29 @@ public class RemotePatientMonitoringController {
         );
 
         try {
+            // Ensure the directory exists
+            File directory = new File("src/main/resources/static/images/");
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+
             // Save the chart as an image file
-            ChartUtils.saveChartAsPNG(new File("src/main/resources/static/images/rpm_chart.png"), barChart, 500, 300);
+            File chartFile = new File(directory, "crop-disease-detection_chart.png");
+            ChartUtils.saveChartAsPNG(chartFile, barChart, 500, 300);
+
+            // Log the file path
+            Logger logger = LoggerFactory.getLogger(MedicalAssetTrackingController.class);
+            logger.info("Chart saved at: " + chartFile.getAbsolutePath());
         } catch (IOException e) {
             e.printStackTrace(); // Handle exceptions appropriately in production
         }
+
+
     }
+
+
+
+
 
     // Method to create the dataset for the bar chart_two valueas
     private CategoryDataset createDataset(BigDecimal totalInvestmentCosts, BigDecimal totalNetBenefiti) {
@@ -158,42 +163,5 @@ public class RemotePatientMonitoringController {
         dataset.addValue(totalInvestmentCosts, "Costs", "Total Investment Costs");
         dataset.addValue(totalNetBenefiti, "Benefits", "Total Net Benefit");
         return dataset;
-    }
-
-
-
-    @GetMapping("/rpm/generate-pdf")
-    public ResponseEntity<byte[]> generatePdfReport(@RequestParam("quantities") String[] quantities,
-                                                    @RequestParam("investmentPeriod") int investmentPeriod) {
-        List<RemotePatientMonitoringDevices> devices = rpmService.getAllDevices();
-        List<Integer> finalQuantities = new ArrayList<>();
-
-        for (int i = 0; i < devices.size(); i++) {
-            String quantityStr = (i < quantities.length) ? quantities[i] : "";
-            int quantity;
-            try {
-                quantity = (quantityStr == null || quantityStr.isEmpty()) ? devices.get(i).getDefaultQuantity() : Integer.parseInt(quantityStr);
-            } catch (NumberFormatException e) {
-                quantity = devices.get(i).getDefaultQuantity();
-            }
-            finalQuantities.add(quantity);
-        }
-
-        BigDecimal totalInvestmentCosts = rpmService.calculateTotalInvestment(devices, finalQuantities, investmentPeriod);
-        BigDecimal totalNetBenefit = rpmService.calculateTotalNetBenefit(devices, finalQuantities, investmentPeriod);
-        BigDecimal roi = rpmService.calculateROI(totalInvestmentCosts, totalNetBenefit);
-
-        String title = "Remote Patient Monitoring ROI Report";
-        String content = "Total Investment Costs: " + totalInvestmentCosts + "\n" +
-                "Total Net Benefit: " + totalNetBenefit + "\n" +
-                "ROI: " + roi;
-
-        byte[] pdfBytes = pdfReportService.generateReport(title, content);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=roi_report.pdf");
-        headers.add(HttpHeaders.CONTENT_TYPE, "application/pdf");
-
-        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
     }
 }

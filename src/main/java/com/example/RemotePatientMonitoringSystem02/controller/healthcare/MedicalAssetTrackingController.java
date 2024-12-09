@@ -35,6 +35,11 @@ public class MedicalAssetTrackingController {
     }
 
 
+//    @GetMapping("/healthcare/healthcare-list")
+//    public String healthcareList() {
+//        return "healthcare/healthcare-list"; // Ensure the Thymeleaf template is named "healthcare-list.html"
+//    }
+
     @GetMapping("/healthcare/medical-asset-tracking-form")
     public String showForm(Model model) {
         List<MedicalAssetTrackingDevices> devices = medicalAssetTrackingService.getAllDevices();
